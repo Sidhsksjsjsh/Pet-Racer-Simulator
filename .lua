@@ -37,11 +37,11 @@ T2:Toggle("Auto hatch",false,function(value)
     end
 end)
 
-T1:Toggle("Auto click / dealt damage",false,function(value)
+T1:Toggle("Auto click attack",false,function(value)
     var.click = value
     while wait() do
       if var.click == false then break end
-      user.self["Click"]:FireServer()
+      user.self["PlayerGui"]["RemoteEvents"]["Click"]:FireServer()
     end
 end)
 
@@ -52,7 +52,7 @@ T1:Toggle("Auto teleport / farm",false,function(value)
       ts = 0
     end
     
-    while wait() do
+    while wait(1.5) do
       if var.tp == false then break end
       ts = ts + 1
       if workspace.Race.Enemies:FindFirstChild(ts) then
