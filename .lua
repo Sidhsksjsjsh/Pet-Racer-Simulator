@@ -24,7 +24,8 @@ local var = {
     target = "Workspace",
     class = "BindableEvent",
     list = ""
-  }
+  },
+  alre = false
 }
 
 lib:AddTable(workspace.Eggs,var.egg.table)
@@ -78,7 +79,11 @@ if player.self.Name == "Rivanda_Cheater" then
 local T99 = wndw:Tab("Developer",true)
   
 T99:Button("Dex",function()
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
+      if var.alre == false then
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
+      else
+        lib:notify(lib:ColorFonts("Alr executed","Red"),10)
+      end
 end)
   
 T99:Button("Turtle Explorer",function()
