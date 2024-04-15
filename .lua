@@ -54,17 +54,12 @@ end)
 local ts = 0
 T1:Toggle("Auto teleport / farm",false,function(value)
     var.tp = value
-    if value == false then
-      ts = 0
-    end
-    
-    while wait(1.5) do
+    while wait() do
       if var.tp == false then break end
-      ts = ts + 1
-      if workspace.Race.Enemies:FindFirstChild(ts) then
-        user.self.Character.HumanoidRootPart.CFrame = workspace["Race"]["Enemies"][ts]["MainPart"].CFrame
+      if workspace.Race.Enemies:FindFirstChild(user.self.SideStats.Level.Value) then
+        user.self.Character.HumanoidRootPart.CFrame = workspace["Race"]["Enemies"][user.self.SideStats.Level.Value]["MainPart"].CFrame
       else
-        user.self.Character.HumanoidRootPart.CFrame = workspace["NPC"][ts]["Skin"]["HumanoidRootPart"].CFrame
+        user.self.Character.HumanoidRootPart.CFrame = workspace["NPC"][user.self.SideStats.Level.Value]["Skin"]["HumanoidRootPart"].CFrame
       end
     end
 end)
@@ -122,7 +117,7 @@ local function CrawlInstances(Inst)
             if Iris.SmallButton({"View and Copy Properties"}).clicked then
                 SelectedInstance = Instance
                 Properties = GetPropertiesForInstance(Instance)
-                setclipboard(SelectedInstance and SelectedInstance:GetFullName() or "UNKNOWN INSTANCE")
+                setclipboard("game." .. (SelectedInstance and SelectedInstance:GetFullName() or "UNKNOWN INSTANCE"))
                 lib:notify("Copied to the clipboard",10)
             end
             Iris.End()
@@ -213,6 +208,7 @@ T100:Button("Start detect",function()
       lab:EditLabel("Loading... 'require()'")
       wait(1)
       lab:EditLabel("")
+      var.remote.list = ""
       for i,v in pairs(game:GetService(var.remote.target):GetDescendants()) do
         if v:IsA(var.remote.class) then
           if var.remote.class == "BindableEvent" then
