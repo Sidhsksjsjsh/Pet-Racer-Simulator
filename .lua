@@ -9,7 +9,7 @@ local user = {
 }
 
 local workspace = game:GetService("Workspace")
-
+local cg = game:GetService("CoreGui")
 local var = {
   click = false,
   tp = false,
@@ -19,7 +19,12 @@ local var = {
     s = "Basic",
     d = {}
   },
-  gates = {}
+  gates = {},
+  remote = {
+    target = "Workspace",
+    class = "BindableEvent",
+    list = ""
+  }
 }
 
 lib:AddTable(workspace.Eggs,var.egg.table)
@@ -182,6 +187,41 @@ Iris:Connect(function()
         end
     end
 end)
+end)
+
+local T100 = wndw:Tab("Remote Finder")
+local lab = T100:Label(var.remote.list)
+  
+T100:Dropdown("Target detection",{"Workspace","ReplicatedStorage","Players"},function(value)
+      var.remote.target = value
+end)
+
+T100:Dropdown("Remote type",{"BindableEvent","BindableFunction","RemoteEvent","RemoteFunction","LocalScript","ModuleScript"},function(value)
+      var.remote.class = value
+end)
+
+T100:Button("Start detect",function()
+      lab:EditLabel("Loading... 'require()'")
+      wait(1)
+      lab:EditLabel("")
+      for i,v in pairs(game:GetService(var.remote.target):GetDescendants()) do
+        if v:IsA(var.remote.class) then
+          if var.remote.class == "BindableEvent" then
+            var.remote.list = var.remote.list .. "\n" .. lib:ColorFonts(v.Parent.Name .. "." .. v.Name,"Red") .. ":" .. lib:ColorFonts("Fire()","Yellow")
+          elseif var.remote.class == "BindableFunction" then
+            var.remote.list = var.remote.list .. "\n" .. lib:ColorFonts(v.Parent.Name .. "." .. v.Name,"Red") .. ":" .. lib:ColorFonts("Invoke()","Blue")
+          elseif var.remote.class == "RemoteEvent" then
+            var.remote.list = var.remote.list .. "\n" .. lib:ColorFonts(v.Parent.Name .. "." .. v.Name,"Red") .. ":" .. lib:ColorFonts("FireServer()","Yellow")
+          elseif var.remote.class == "RemoteFunction" then
+            var.remote.list = var.remote.list .. "\n" .. lib:ColorFonts(v.Parent.Name .. "." .. v.Name,"Red") .. ":" .. lib:ColorFonts("InvokeServer()","Blue")
+          elseif var.remote.class == "LocalScript" then
+            var.remote.list = var.remote.list .. "\n" .. lib:ColorFonts(v.Parent.Name .. "." .. v.Name,"Red") .. " -> " .. lib:ColorFonts("LocalScript","Green")
+          elseif var.remote.class == "ModuleScript" then
+            var.remote.list = var.remote.list .. "\n" .. lib:ColorFonts(v.Parent.Name .. "." .. v.Name,"Red") .. " -> " .. lib:ColorFonts("ModuleScript","Green")
+          end
+        end
+      end
+      lab:EditLabel(var.remote.list)
 end)
 end
 
