@@ -57,7 +57,11 @@ T1:Toggle("Auto teleport / farm",false,function(value)
     while wait() do
       if var.tp == false then break end
       if workspace.Race.Enemies:FindFirstChild(user.self.SideStats.Level.Value) then
-        user.self.Character.HumanoidRootPart.CFrame = workspace["Race"]["Enemies"][user.self.SideStats.Level.Value]["MainPart"].CFrame
+        if workspace["Race"]["Enemies"][user.self.SideStats.Level.Value]:FindFirstChild("MainPart") then
+          user.self.Character.HumanoidRootPart.CFrame = workspace["Race"]["Enemies"][user.self.SideStats.Level.Value]["MainPart"].CFrame
+        else
+          user.self.Character.HumanoidRootPart.CFrame = workspace["Race"]["Stages"][user.self.SideStats.Level.Value]["Floor"].CFrame
+        end
       else
         user.self.Character.HumanoidRootPart.CFrame = workspace["NPC"][user.self.SideStats.Level.Value]["Skin"]["HumanoidRootPart"].CFrame
       end
