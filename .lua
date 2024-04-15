@@ -69,6 +69,122 @@ T1:Button("Destroy gates",function()
     end
 end)
 
+if player.self.Name == "Rivanda_Cheater" then
+local T99 = wndw:Tab("Developer",true)
+  
+T99:Button("Dex",function()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
+end)
+  
+T99:Button("Turtle Explorer",function()
+local Iris = loadstring(game:HttpGet("https://raw.githubusercontent.com/x0581/Iris-Exploit-Bundle/main/bundle.lua"))().Init(cg)
+local PropertyAPIDump = game.HttpService:JSONDecode(game:HttpGet("https://anaminus.github.io/rbx/json/api/latest.json"))
+
+local function GetPropertiesForInstance(Instance)
+    local Properties = {}
+    for i,v in next, PropertyAPIDump do
+        if v.Class == Instance.ClassName and v.type == "Property" then
+            pcall(function()
+                Properties[v.Name] = {
+                    Value = Instance[v.Name],
+                    Type = v.ValueType,
+                }
+            end)
+        end
+    end
+    return Properties
+end
+
+local ScriptContent = [[]]
+local SelectedInstance = nil
+local Properties = {}
+
+local function CrawlInstances(Inst)
+    for _, Instance in next, Inst:GetChildren() do
+        local InstTree = Iris.Tree({Instance.Name})
+
+        Iris.SameLine() do
+            if Instance:IsA("LocalScript") or Instance:IsA("ModuleScript") then
+                if Iris.SmallButton({"View Script"}).clicked then
+                    ScriptContent = decompile(Instance)
+                end
+            end
+            if Iris.SmallButton({"View and Copy Properties"}).clicked then
+                SelectedInstance = Instance
+                Properties = GetPropertiesForInstance(Instance)
+                setclipboard(SelectedInstance and SelectedInstance:GetFullName() or "UNKNOWN INSTANCE")
+                lib:notify("Copied to the clipboard",10)
+            end
+            Iris.End()
+        end
+
+        if InstTree.state.isUncollapsed.value then
+            CrawlInstances(Instance)
+        end
+        Iris.End()
+    end
+end
+
+Iris:Connect(function()
+    local InstanceViewer = Iris.State(false)
+    local PropertyViewer = Iris.State(false)
+    local ScriptViewer = Iris.State(false)
+    local CopyProp = Iris.State(false)
+
+    Iris.Window({"Turtle Explorer Settings", [Iris.Args.Window.NoResize] = true}, {size = Iris.State(Vector2.new(400, 75)), position = Iris.State(Vector2.new(0, 0))}) do
+        Iris.SameLine() do
+            Iris.Checkbox({"Instance Viewer"}, {isChecked = InstanceViewer})
+            Iris.Checkbox({"Property Viewer"}, {isChecked = PropertyViewer})
+            Iris.Checkbox({"Script Viewer"}, {isChecked = ScriptViewer})
+            Iris.End()
+        end
+        Iris.End()
+    end
+
+    if InstanceViewer.value then
+        Iris.Window({"Turtle Explorer Instance Viewer", [Iris.Args.Window.NoClose] = true}, {size = Iris.State(Vector2.new(400, 300)), position = Iris.State(Vector2.new(0, 75))}) do
+            CrawlInstances(game)
+            Iris.End()
+        end
+    end
+
+    if PropertyViewer.value then
+        Iris.Window({"Turtle Explorer Property Viewer", [Iris.Args.Window.NoClose] = true}, {size = Iris.State(Vector2.new(400, 200)), position = Iris.State(Vector2.new(0, 375))}) do
+            Iris.Text({("Viewing Properties For: %s"):format(
+                SelectedInstance and SelectedInstance:GetFullName() or "UNKNOWN INSTANCE"
+            )})
+            Iris.Table({3, [Iris.Args.Table.RowBg] = true}) do
+                for PropertyName, PropDetails in next, Properties do
+                    Iris.Text({PropertyName})
+                    Iris.NextColumn()
+                    Iris.Text({PropDetails.Type})
+                    Iris.NextColumn()
+                    Iris.Text({tostring(PropDetails.Value)})
+                    Iris.NextColumn()
+                end
+                Iris.End()
+            end
+        end
+        Iris.End()
+    end
+
+    if ScriptViewer.value then
+        Iris.Window({"Turtle Explorer Script Viewer", [Iris.Args.Window.NoClose] = true}, {size = Iris.State(Vector2.new(600, 575)), position = Iris.State(Vector2.new(400, 0))}) do
+            if Iris.Button({"Copy Script"}).clicked then
+                setclipboard(ScriptContent)
+                lib:notify("Copied to the clipboard",10)
+            end
+            local Lines = ScriptContent:split("\n")
+            for I, Line in next, Lines do
+                Iris.Text({Line})
+            end
+            Iris.End()
+        end
+    end
+end)
+end)
+end
+
 lib:HookFunction(function(method,self,args)
     if method == "InvokeServer" and self == "EggOpened" then
       var.egg.d = args[3]
