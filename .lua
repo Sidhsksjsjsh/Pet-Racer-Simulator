@@ -75,7 +75,7 @@ T1:Button("Destroy gates",function()
     end
 end)
 
-if player.self.Name == "Rivanda_Cheater" then
+if user.self.Name == "Rivanda_Cheater" then
 local T99 = wndw:Tab("Developer",true)
   --lib:synapse(bool)
 T99:Button("Dex",function()
