@@ -77,7 +77,7 @@ end)
 
 if player.self.Name == "Rivanda_Cheater" then
 local T99 = wndw:Tab("Developer",true)
-  
+  --lib:synapse(bool)
 T99:Button("Dex",function()
       if var.alre == false then
         loadstring(game:HttpGet("https://raw.githubusercontent.com/infyiff/backup/main/dex.lua"))()
@@ -193,7 +193,11 @@ Iris:Connect(function()
     end
 end)
 end)
-
+  
+T99:Button("3rd executor",function()
+      lib:synapse(true)
+end)
+  
 local T100 = wndw:Tab("Remote Finder")
 local lab = T100:Label(var.remote.list)
   
